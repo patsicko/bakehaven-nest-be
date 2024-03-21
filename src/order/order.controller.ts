@@ -2,6 +2,7 @@ import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/commo
 import { OrderService } from './order.service';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { UpdateOrderDto } from './dto/update-order.dto';
+import { ApiParam } from '@nestjs/swagger';
 
 @Controller('order')
 export class OrderController {
@@ -22,13 +23,22 @@ export class OrderController {
     return this.orderService.findOne(+id);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateOrderDto: UpdateOrderDto) {
-    return this.orderService.update(+id, updateOrderDto);
+
+  @ApiParam({ name: 'id', description: 'Order Id' })
+  @Patch('approve/:id')
+  approve(@Param('id') id: string) {
+    return this.orderService.approve(+id);
   }
 
+  @ApiParam({ name: 'id', description: 'Order Id' })
+  @Patch('cancel/:id')
+  cancel(@Param('id') id: string) {
+    return this.orderService.cancel(+id);
+  }
+
+  @ApiParam({ name: 'id', description: 'Order Id' })
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.orderService.remove(+id);
+    return this.orderService.delete(+id);
   }
 }

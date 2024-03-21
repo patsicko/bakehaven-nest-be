@@ -24,7 +24,7 @@ export class User {
   @Column({ default: true })
   isActive: boolean;
 
-  @OneToMany(()=>Order, order=>order.user)
+  @OneToMany(()=>Order, order=>order.user,{ onDelete: 'CASCADE' })
   orders:Order[]
   
 

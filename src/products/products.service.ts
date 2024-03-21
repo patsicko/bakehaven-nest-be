@@ -20,6 +20,25 @@ export class ProductsService {
     return products
   }
 
+  async findByName(name: string): Promise<Product | string | null> {
+    const product = await this.productRepository.findOne({ where: { name } });
+    if (!product) {
+      return 'Product not found';
+    }
+    return product;
+  }
+
+  // async findByCategory(category: string): Promise<Product[] | string> {
+  //   const products = await this.productRepository.find({ where: { category } });
+  //   console.log("products",products)
+  //   if (!products || products.length === 0) {
+  //     return 'No products found for this category';
+  //   }
+  //   return products;
+  // }
+  
+
+
  async findOne(id: number):Promise<Product | string | null > {
   const product = await this.productRepository.findOne({where:{id}})
   if(!product){

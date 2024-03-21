@@ -2,6 +2,7 @@ import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/commo
 import { ProductsService } from './products.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
+import { ApiParam } from '@nestjs/swagger';
 
 @Controller('products')
 export class ProductsController {
@@ -16,6 +17,18 @@ export class ProductsController {
   findAll() {
     return this.productsService.findAll();
   }
+   
+  @ApiParam({ name: 'name', description: 'Product name' })
+  @Get(':name')
+  findByName(@Param('name') name: string) {
+    return this.productsService.findByName(name);
+  }
+
+  // @ApiParam({name: 'category', description: 'Product category' })
+  // @Get(':category')
+  // findByCategory(@Param('category') category: string) {
+  //   return this.productsService.findByCategory(category);
+  // }
 
   @Get(':id')
   findOne(@Param('id') id: string) {

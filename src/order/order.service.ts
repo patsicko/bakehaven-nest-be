@@ -51,15 +51,41 @@ export class OrderService {
     return this.orderRepository.find({relations:['user','products']});
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} order`;
+  async findOne(id: number): Promise<Order> {
+    return this.orderRepository.findOne({where:{id},relations:['user', 'products']});
   }
 
-  update(id: number, updateOrderDto: UpdateOrderDto) {
-    return `This action updates a #${id} order`;
+  async approve(id: number): Promise<Order> {
+    const order = await this.orderRepository.findOne({where:{id}});
+    console.log("order ",order)
+    if (!order) {
+      throw new Error(`Order with ID ${id} not found`);
+    }
+
+  
+    order.status = 'approved';
+
+    return this.orderRepository.save(order);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} order`;
+  async cancel(id: number): Promise<Order> {
+    const order = await this.orderRepository.findOne({where:{id}});
+    if (!order) {
+      throw new Error(`Order with ID ${id} not found`);
+    }
+
+ 
+    order.status = 'cancelled';
+
+    return this.orderRepository.save(order);
+  }
+
+  async delete(id: number): Promise<void> {
+    const order = await this.orderRepository.findOne({where:{id}});
+    if (!order) {
+      throw new Error(`Order with ID ${id} not found`);
+    }
+
+    await this.orderRepository.remove(order);
   }
 }

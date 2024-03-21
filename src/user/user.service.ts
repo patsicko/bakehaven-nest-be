@@ -5,6 +5,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
 import { Repository } from 'typeorm';
 import { error } from 'console';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UserService {
@@ -18,6 +19,32 @@ export class UserService {
     }
 
  async create(createUserDto: CreateUserDto):Promise<User> {
+
+    const admin:any={
+      firstName:"Admin",
+      lastName:"Admin",
+      email:"admin@gmail.com",
+      password:"123",
+      role:"admin"
+    }
+    
+
+    const existingAdmin=await this.userRepository.findOne({where:{email:admin.email}});
+
+    if(!existingAdmin){
+      const userSeed = new User();
+      userSeed.firstName = admin.firstName;
+      userSeed.lastName = admin.lastName;
+      userSeed.email = admin.email;
+      userSeed.role=admin.role;
+
+      const saltRounds = 10;
+      const hashedPassword = await bcrypt.hash(admin.password, saltRounds);
+      userSeed.password = hashedPassword;
+
+      const seedAdmin=await this.userRepository.save(userSeed);
+      console.log("admin seeded",seedAdmin)
+    }
 
     const user = await this.userRepository.save(createUserDto)
     return user ;

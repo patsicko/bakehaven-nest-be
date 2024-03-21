@@ -11,7 +11,7 @@ export class Order {
     @JoinTable()
     products:Product[]
    
-    @ManyToOne(()=>User,user=>user.orders)
+    @ManyToOne(()=>User,user=>user.orders,{ onDelete: 'CASCADE' })
     user:User
 
     @Column({default:1})
@@ -26,7 +26,7 @@ export class Order {
     @Column({ default: false })
     isPaid: boolean;
 
-    @Column({type:'enum',enum:['pending','delivered','canceled'],nullable:true})
+    @Column({type:'enum',enum:['pending','approved','cancelled'],nullable:true})
     status:string
   
 
